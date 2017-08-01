@@ -1,8 +1,7 @@
 package cc.hisong.clrsnote.chapter02;
 
 import java.lang.reflect.Array;
-import java.math.BigInteger;
-import java.util.BitSet;
+import java.util.Arrays;
 import java.util.Random;
 
 public class SortAlgorithmsINChapter02 {
@@ -129,7 +128,12 @@ public class SortAlgorithmsINChapter02 {
             int leftEnd = (left + right) / 2;
             mergeSort(arr, left, leftEnd);
             mergeSort(arr, leftEnd + 1, right);
-            merge(arr, left, leftEnd, right);
+
+            //if it's already ordered from left to right, then we don't merge them
+            if (arr[leftEnd] > arr[leftEnd + 1]) {
+                merge(arr, left, leftEnd, right);
+            }
+
         }
     }
 
@@ -141,6 +145,87 @@ public class SortAlgorithmsINChapter02 {
             if (arr[i] < arr[i - 1]) throw new AssertionError();
         }
         long end = System.nanoTime();
+        System.out.println("test on merge sort pass in "+(end - start));
+    }
+
+    private static void mergePass(int[] arr, int dis) {
+        int length = arr.length;
+        int i;
+        for (i = 0; i + 2 * dis - 1 < length; i = i + 2 * dis) {
+            merge(arr, i, i + dis - 1, i + dis * 2 - 1);
+        }
+        if (i + dis - 1 < length) {
+            merge(arr, i, i + dis - 1, length - 1);
+        }
+    }
+
+    public static void mergeWithoutRecursion(int[] arr) {
+        int length = arr.length;
+        for (int dis = 1; dis < length; dis = dis * 2) {
+            mergePass(arr, dis);
+        }
+    }
+
+    public static void testMergeWithoutRecursion(int arraySize) {
+        int[] arr = (new Random()).ints(arraySize).toArray();
+        long start = System.nanoTime();
+        mergeWithoutRecursion(arr);
+        for (int i = 1; i < arraySize; i++) {
+            if (arr[i] < arr[i - 1]) throw new AssertionError();
+        }
+        long end = System.nanoTime();
+        System.out.println("test on merge sort without recursion pass in "+(end - start));
+    }
+
+    public static void testAllSortMethods(int arraySize) {
+        int[] arr = (new Random()).ints(arraySize).toArray();
+//        mergeWithoutRecursion(arr);
+//        insertionSortDescending(arr);
+        int[] copyArr = Arrays.copyOf(arr, arraySize);
+
+        long start = System.nanoTime();
+        Arrays.sort(copyArr);
+        for (int i = 1; i < arraySize; i++) {
+            if (copyArr[i] < copyArr[i - 1]) throw new AssertionError();
+        }
+        long end = System.nanoTime();
+        System.out.println("test on built-in sort pass in "+(end - start));
+
+        copyArr = Arrays.copyOf(arr, arraySize);
+        start = System.nanoTime();
+        insertionSort(copyArr);
+        for (int i = 1; i < arraySize; i++) {
+            if (copyArr[i] < copyArr[i - 1]) throw new AssertionError();
+        }
+        end = System.nanoTime();
         System.out.println("test on insertion sort pass in "+(end - start));
+
+        copyArr = Arrays.copyOf(arr, arraySize);
+        start = System.nanoTime();
+        insertionSortDescending(copyArr);
+        for (int i = 1; i < arraySize; i++) {
+            if (copyArr[i] > copyArr[i - 1]) throw new AssertionError();
+        }
+        end = System.nanoTime();
+        System.out.println("test on insertion descending sort pass in "+(end - start));
+
+        copyArr = Arrays.copyOf(arr, arraySize);
+        start = System.nanoTime();
+        mergeSort(copyArr, 0, arraySize - 1);
+        for (int i = 1; i < arraySize; i++) {
+            if (copyArr[i] < copyArr[i - 1]) throw new AssertionError();
+        }
+        end = System.nanoTime();
+        System.out.println("test on merge sort pass in "+(end - start));
+
+        copyArr = Arrays.copyOf(arr, arraySize);
+        start = System.nanoTime();
+        mergeWithoutRecursion(copyArr);
+        for (int i = 1; i < arraySize; i++) {
+            if (copyArr[i] < copyArr[i - 1]) throw new AssertionError();
+        }
+        end = System.nanoTime();
+        System.out.println("test on merge sort without recursion pass in "+(end - start));
+
     }
 }
