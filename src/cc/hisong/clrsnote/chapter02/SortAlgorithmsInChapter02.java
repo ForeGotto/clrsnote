@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Random;
 
-public class SortAlgorithmsINChapter02 {
+public class SortAlgorithmsInChapter02 {
 
     /**
      * insertion sort algorithm in chapter 2 of clrs
@@ -89,6 +89,27 @@ public class SortAlgorithmsINChapter02 {
     }
 
     /**
+     * exercise 2.2-2 in chapter of clrs
+     * @param arr the array to be sorted
+     */
+    public static void selectionSort(int[] arr) {
+        int length = arr.length;
+        for (int i = 0, minCursor; i < length - 1; i++) {
+            minCursor = i;
+            for (int j = i + 1; j < length; j++) {
+                if (arr[j] < arr[minCursor]) {
+                    minCursor = j;
+                }
+            }
+            if (minCursor != i) {
+                int tmp = arr[minCursor];
+                arr[minCursor] = arr[i];
+                arr[i] = tmp;
+            }
+        }
+    }
+
+    /**
      * merge function for mergeSort
      * @param arr the array to sort
      * @param left the start index of left array
@@ -151,8 +172,8 @@ public class SortAlgorithmsINChapter02 {
     private static void mergePass(int[] arr, int dis) {
         int length = arr.length;
         int i;
-        for (i = 0; i + 2 * dis - 1 < length; i = i + 2 * dis) {
-            merge(arr, i, i + dis - 1, i + dis * 2 - 1);
+        for (i = 0; i + (dis * 2) - 1 < length; i = i + (dis * 2)) {
+            merge(arr, i, i + dis - 1, i + (dis * 2) - 1);
         }
         if (i + dis - 1 < length) {
             merge(arr, i, i + dis - 1, length - 1);
@@ -161,7 +182,7 @@ public class SortAlgorithmsINChapter02 {
 
     public static void mergeWithoutRecursion(int[] arr) {
         int length = arr.length;
-        for (int dis = 1; dis < length; dis = dis * 2) {
+        for (int dis = 1; dis < length; dis = (dis << 1)) {
             mergePass(arr, dis);
         }
     }
@@ -176,6 +197,8 @@ public class SortAlgorithmsINChapter02 {
         long end = System.nanoTime();
         System.out.println("test on merge sort without recursion pass in "+(end - start));
     }
+
+    //private static void mergeWithout
 
     public static void testAllSortMethods(int arraySize) {
         int[] arr = (new Random()).ints(arraySize).toArray();
@@ -208,6 +231,15 @@ public class SortAlgorithmsINChapter02 {
         }
         end = System.nanoTime();
         System.out.println("test on insertion descending sort pass in "+(end - start));
+
+        copyArr = Arrays.copyOf(arr, arraySize);
+        start = System.nanoTime();
+        selectionSort(copyArr);
+        for (int i = 1; i < arraySize; i++) {
+            if (copyArr[i] < copyArr[i - 1]) throw new AssertionError();
+        }
+        end = System.nanoTime();
+        System.out.println("test on selection sort descending sort pass in "+(end - start));
 
         copyArr = Arrays.copyOf(arr, arraySize);
         start = System.nanoTime();
