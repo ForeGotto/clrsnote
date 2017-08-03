@@ -1,6 +1,5 @@
 package cc.hisong.clrsnote.chapter02;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -119,11 +118,10 @@ public class SortAlgorithmsInChapter02 {
     private static void merge(int[] arr, int left, int leftEnd, int right) {
         int lengthLeft = leftEnd - left + 1;
         int lengthRight = right - leftEnd;
-        int[] l = new int[lengthLeft + 1];
-        int[] r = new int[lengthRight + 1];
 
-        System.arraycopy(arr, left, l, 0, lengthLeft);
-        System.arraycopy(arr, leftEnd + 1, r, 0, lengthRight);
+        int[] l = Arrays.copyOfRange(arr, left, leftEnd + 2);
+        int[] r = Arrays.copyOfRange(arr, leftEnd + 1, right + 2);
+
         l[lengthLeft] = Integer.MAX_VALUE;
         r[lengthRight] = Integer.MAX_VALUE;
 
@@ -136,6 +134,7 @@ public class SortAlgorithmsInChapter02 {
                 j++;
             }
         }
+
     }
 
     /**
@@ -169,6 +168,11 @@ public class SortAlgorithmsInChapter02 {
         System.out.println("test on merge sort pass in "+(end - start));
     }
 
+    /**
+     * sub procedure for bottom-up merge sort
+     * @param arr the array to be sorted
+     * @param dis the length of each ordered piece
+     */
     private static void mergePass(int[] arr, int dis) {
         int length = arr.length;
         int i;
@@ -198,7 +202,45 @@ public class SortAlgorithmsInChapter02 {
         System.out.println("test on merge sort without recursion pass in "+(end - start));
     }
 
-    //private static void mergeWithout
+
+    private static void nonSentinelMerge(int[] arr, int left, int leftEnd, int right) {
+        int lengthLeft = leftEnd - left + 1;
+        int lengthRight = right - leftEnd;
+
+        int[] l = Arrays.copyOfRange(arr, left, leftEnd + 1);
+        int[] r = Arrays.copyOfRange(arr, leftEnd + 1, right + 1);
+
+        int i, j, k;
+        for (i = 0, j = 0, k = left; i < lengthLeft && j < lengthRight && k <= right; k++) {
+            if (r[j] > l[i]) {
+                arr[k] = l[i];
+                i++;
+            } else {
+                arr[k] = r[j];
+                j++;
+            }
+        }
+
+        if (i == lengthLeft) {
+            System.arraycopy(r, j, arr, k, lengthRight - j);
+        }
+
+        if (j == lengthRight) {
+            System.arraycopy(l, i, arr, k, lengthLeft - i);
+        }
+    }
+
+    public static void mergeSortWithNonSentinelMerge(int[] arr, int left, int right) {
+        if (left < right) {
+            int leftEnd = (left + right) / 2;
+            mergeSortWithNonSentinelMerge(arr, left, leftEnd);
+            mergeSortWithNonSentinelMerge(arr, leftEnd + 1, right);
+            if (arr[leftEnd] > arr[leftEnd + 1]) {
+                nonSentinelMerge(arr, left, leftEnd, right);
+            }
+
+        }
+    }
 
     public static void testAllSortMethods(int arraySize) {
         int[] arr = (new Random()).ints(arraySize).toArray();
@@ -258,6 +300,16 @@ public class SortAlgorithmsInChapter02 {
         }
         end = System.nanoTime();
         System.out.println("test on merge sort without recursion pass in "+(end - start));
+
+        copyArr = Arrays.copyOf(arr, arraySize);
+        start = System.nanoTime();
+        mergeSortWithNonSentinelMerge(copyArr, 0, arraySize - 1);
+
+        for (int i = 1; i < arraySize; i++) {
+            if (copyArr[i] < copyArr[i - 1]) throw new AssertionError();
+        }
+        end = System.nanoTime();
+        System.out.println("test on merge sort without sentinel pass in "+(end - start));
 
     }
 }
