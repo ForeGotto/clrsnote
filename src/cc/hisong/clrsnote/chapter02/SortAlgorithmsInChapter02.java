@@ -7,34 +7,25 @@ public class SortAlgorithmsInChapter02 {
 
     /**
      * insertion sort algorithm in chapter 2 of clrs
+     *
      * @param arr an array of integer which is to be sorted
      */
     public static void insertionSort(int[] arr) {
         int length = arr.length;
-        for (int i =1, key; i < length; i++) {
+        for (int i = 1, key; i < length; i++) {
             key = arr[i];
             int j = i - 1;
             while (j >= 0 && key < arr[j]) {
-                arr[j+1] = arr[j];
+                arr[j + 1] = arr[j];
                 j--;
             }
-            arr[j+1] = key;
+            arr[j + 1] = key;
         }
-    }
-
-    public static void testInsertionSort(int arraySize) {
-        int[] arr = (new Random()).ints(arraySize).toArray();
-        long start = System.nanoTime();
-        insertionSort(arr);
-        for (int i = 1; i < arraySize; i++) {
-            if (arr[i] < arr[i - 1]) throw new AssertionError();
-        }
-        long end = System.nanoTime();
-        System.out.println("test on insertion sort pass in "+(end - start));
     }
 
     /**
      * exercise 2.1-2 in chapter of clrs
+     *
      * @param arr an array of integer which is to be sorted
      */
     public static void insertionSortDescending(int[] arr) {
@@ -43,27 +34,17 @@ public class SortAlgorithmsInChapter02 {
             key = arr[i];
             int j = i - 1;
             while (j >= 0 && key > arr[j]) {
-                arr[j+1] = arr[j];
+                arr[j + 1] = arr[j];
                 j--;
             }
-            arr[j+1] = key;
+            arr[j + 1] = key;
         }
-    }
-
-    public static void testInsertionSortDescending(int arraySize) {
-        int[] arr = (new Random()).ints(arraySize).toArray();
-        long start = System.nanoTime();
-        insertionSortDescending(arr);
-        for (int i = 1; i < arraySize; i++) {
-            if (arr[i] > arr[i - 1]) throw new AssertionError();
-        }
-        long end = System.nanoTime();
-        System.out.println("test on descending insertion sort pass in "+(end - start));
     }
 
     /**
      * exercise 2.1-3 in chapter of clrs
-     * @param arr the array in which to find v
+     *
+     * @param arr   the array in which to find v
      * @param value the value to find
      * @return
      */
@@ -84,11 +65,12 @@ public class SortAlgorithmsInChapter02 {
             if (arr[linearSearch(arr, arr[i])] != arr[i]) throw new AssertionError();
         }
         long end = System.nanoTime();
-        System.out.println("test on linear search pass in "+(end - start));
+        System.out.println("test on linear search pass in " + (end - start));
     }
 
     /**
-     * exercise 2.2-2 in chapter of clrs
+     * exercise 2.2-2 in chapter 2 of clrs
+     *
      * @param arr the array to be sorted
      */
     public static void selectionSort(int[] arr) {
@@ -110,10 +92,11 @@ public class SortAlgorithmsInChapter02 {
 
     /**
      * merge function for mergeSort
-     * @param arr the array to sort
-     * @param left the start index of left array
+     *
+     * @param arr     the array to sort
+     * @param left    the start index of left array
      * @param leftEnd the end index of left array
-     * @param right the end index of right array
+     * @param right   the end index of right array
      */
     private static void merge(int[] arr, int left, int leftEnd, int right) {
         int lengthLeft = leftEnd - left + 1;
@@ -139,8 +122,9 @@ public class SortAlgorithmsInChapter02 {
 
     /**
      * merge sort algorithm in chapter 2 of clrs
-     * @param arr the array to be sorted
-     * @param left the start of sort area
+     *
+     * @param arr   the array to be sorted
+     * @param left  the start of sort area
      * @param right the end of sort area
      */
     public static void mergeSort(int[] arr, int left, int right) {
@@ -157,19 +141,9 @@ public class SortAlgorithmsInChapter02 {
         }
     }
 
-    public static void testMergeSort(int arraySize) {
-        int[] arr = (new Random()).ints(arraySize).toArray();
-        long start = System.nanoTime();
-        mergeSort(arr, 0, arraySize-1);
-        for (int i = 1; i < arraySize; i++) {
-            if (arr[i] < arr[i - 1]) throw new AssertionError();
-        }
-        long end = System.nanoTime();
-        System.out.println("test on merge sort pass in "+(end - start));
-    }
-
     /**
      * sub procedure for bottom-up merge sort
+     *
      * @param arr the array to be sorted
      * @param dis the length of each ordered piece
      */
@@ -184,24 +158,17 @@ public class SortAlgorithmsInChapter02 {
         }
     }
 
+    /**
+     * bottom-up merge sort
+     *
+     * @param arr
+     */
     public static void mergeWithoutRecursion(int[] arr) {
         int length = arr.length;
         for (int dis = 1; dis < length; dis = (dis << 1)) {
             mergePass(arr, dis);
         }
     }
-
-    public static void testMergeWithoutRecursion(int arraySize) {
-        int[] arr = (new Random()).ints(arraySize).toArray();
-        long start = System.nanoTime();
-        mergeWithoutRecursion(arr);
-        for (int i = 1; i < arraySize; i++) {
-            if (arr[i] < arr[i - 1]) throw new AssertionError();
-        }
-        long end = System.nanoTime();
-        System.out.println("test on merge sort without recursion pass in "+(end - start));
-    }
-
 
     private static void nonSentinelMerge(int[] arr, int left, int leftEnd, int right) {
         int lengthLeft = leftEnd - left + 1;
@@ -230,6 +197,13 @@ public class SortAlgorithmsInChapter02 {
         }
     }
 
+    /**
+     * exercise 2.3-2 in chapter 2 of clrs
+     *
+     * @param arr
+     * @param left
+     * @param right
+     */
     public static void mergeSortWithNonSentinelMerge(int[] arr, int left, int right) {
         if (left < right) {
             int leftEnd = (left + right) / 2;
@@ -242,74 +216,160 @@ public class SortAlgorithmsInChapter02 {
         }
     }
 
+    private static void insert(int[] arr, int index) {
+        int key = arr[index];
+        int i = index - 1;
+        while (i >= 0 && key < arr[i]) {
+            arr[i + 1] = arr[i];
+            i--;
+        }
+        arr[i + 1] = key;
+    }
+
+    /**
+     * exercise 2.3-4 in chapter 2 of clrs
+     *
+     * @param arr
+     * @param index
+     */
+    private static void insertionSortWithRecursion(int[] arr, int index) {
+        if (index > 0) {
+            insertionSortWithRecursion(arr, index - 1);
+            insert(arr, index);
+        }
+    }
+
+    /**
+     * exercise 2.3-5 in chapter 2 of clrs
+     * @param arr
+     * @param from
+     * @param to
+     * @param key
+     * @return
+     */
+    public static int binarySearch(int[] arr, int from, int to, int key) {
+        if (arr[from] > key) {
+            return from;
+        } else if (arr[to] < key) {
+            return to;
+        } else {
+            int left = from, right = to;
+            while (left < right) {
+
+                int middle = (left + right + 1) / 2;
+                //System.out.println(left+" "+middle+" "+right);
+                if (arr[middle] == key) {
+//                    while (arr[middle] == key) {
+//                        middle++;
+//                    }
+//                    return middle - 1;
+                    return middle;
+                } else if (arr[middle] < key) {
+                    left = middle + 1;
+                } else {
+                    right = middle - 1;
+                }
+            }
+
+            return left;
+        }
+    }
+
+    public static void testBinarySearch(int arraySize) {
+        int[] arr = (new Random()).ints(arraySize).toArray();
+        Arrays.sort(arr);
+        long start, end;
+        start = System.nanoTime();
+
+
+        for (int i = 0; i < arraySize; i++) {
+            //System.out.println(i);
+            int index = binarySearch(arr, 0, arraySize - 1, arr[i]);
+            if (index != i) {
+                throw new AssertionError();
+            }
+        }
+
+        end = System.nanoTime();
+        System.out.println("test on binary search pass in " + (end - start));
+    }
+
     public static void testAllSortMethods(int arraySize) {
         int[] arr = (new Random()).ints(arraySize).toArray();
 //        mergeWithoutRecursion(arr);
 //        insertionSortDescending(arr);
         int[] copyArr = Arrays.copyOf(arr, arraySize);
 
-        long start = System.nanoTime();
+        long start, end;
+
+        start = System.nanoTime();
         Arrays.sort(copyArr);
-        for (int i = 1; i < arraySize; i++) {
-            if (copyArr[i] < copyArr[i - 1]) throw new AssertionError();
-        }
-        long end = System.nanoTime();
-        System.out.println("test on built-in sort pass in "+(end - start));
+        end = System.nanoTime();
+        checkIfSortedAscending(copyArr);
+        System.out.println("test on built-in sort pass in " + (end - start));
 
         copyArr = Arrays.copyOf(arr, arraySize);
         start = System.nanoTime();
         insertionSort(copyArr);
-        for (int i = 1; i < arraySize; i++) {
-            if (copyArr[i] < copyArr[i - 1]) throw new AssertionError();
-        }
         end = System.nanoTime();
-        System.out.println("test on insertion sort pass in "+(end - start));
+        checkIfSortedAscending(copyArr);
+        System.out.println("test on insertion sort pass in " + (end - start));
 
         copyArr = Arrays.copyOf(arr, arraySize);
         start = System.nanoTime();
         insertionSortDescending(copyArr);
-        for (int i = 1; i < arraySize; i++) {
-            if (copyArr[i] > copyArr[i - 1]) throw new AssertionError();
-        }
+        checkIfSortedDescending(copyArr);
         end = System.nanoTime();
-        System.out.println("test on insertion descending sort pass in "+(end - start));
+        System.out.println("test on insertion descending sort pass in " + (end - start));
 
         copyArr = Arrays.copyOf(arr, arraySize);
         start = System.nanoTime();
         selectionSort(copyArr);
-        for (int i = 1; i < arraySize; i++) {
-            if (copyArr[i] < copyArr[i - 1]) throw new AssertionError();
-        }
         end = System.nanoTime();
-        System.out.println("test on selection sort descending sort pass in "+(end - start));
+        checkIfSortedAscending(copyArr);
+        System.out.println("test on selection sort pass in " + (end - start));
 
         copyArr = Arrays.copyOf(arr, arraySize);
         start = System.nanoTime();
         mergeSort(copyArr, 0, arraySize - 1);
-        for (int i = 1; i < arraySize; i++) {
-            if (copyArr[i] < copyArr[i - 1]) throw new AssertionError();
-        }
         end = System.nanoTime();
-        System.out.println("test on merge sort pass in "+(end - start));
+        checkIfSortedAscending(copyArr);
+        System.out.println("test on merge sort pass in " + (end - start));
 
         copyArr = Arrays.copyOf(arr, arraySize);
         start = System.nanoTime();
         mergeWithoutRecursion(copyArr);
-        for (int i = 1; i < arraySize; i++) {
-            if (copyArr[i] < copyArr[i - 1]) throw new AssertionError();
-        }
         end = System.nanoTime();
-        System.out.println("test on merge sort without recursion pass in "+(end - start));
+        checkIfSortedAscending(copyArr);
+        System.out.println("test on merge sort without recursion pass in " + (end - start));
 
         copyArr = Arrays.copyOf(arr, arraySize);
         start = System.nanoTime();
         mergeSortWithNonSentinelMerge(copyArr, 0, arraySize - 1);
-
-        for (int i = 1; i < arraySize; i++) {
-            if (copyArr[i] < copyArr[i - 1]) throw new AssertionError();
-        }
         end = System.nanoTime();
-        System.out.println("test on merge sort without sentinel pass in "+(end - start));
+        checkIfSortedAscending(copyArr);
+        System.out.println("test on merge sort without sentinel pass in " + (end - start));
 
+        copyArr = Arrays.copyOf(arr, arraySize);
+        start = System.nanoTime();
+        insertionSortWithRecursion(copyArr, arraySize - 1);
+        end = System.nanoTime();
+        checkIfSortedAscending(copyArr);
+        System.out.println("test on insertion sort with recursion pass in " + (end - start));
+
+    }
+
+    private static void checkIfSortedAscending(int[] arr) {
+        int size = arr.length;
+        for (int i = 1; i < size; i++) {
+            if (arr[i] < arr[i - 1]) throw new AssertionError();
+        }
+    }
+
+    private static void checkIfSortedDescending(int[] arr) {
+        int size = arr.length;
+        for (int i = 1; i < size; i++) {
+            if (arr[i] > arr[i - 1]) throw new AssertionError();
+        }
     }
 }

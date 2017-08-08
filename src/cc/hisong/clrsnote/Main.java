@@ -13,9 +13,9 @@ public class Main {
 //        SortAlgorithmsInChapter02.testLinearSearch(10000);
 //        SortAlgorithmsInChapter02.testMergeSort(10000);
 //        SortAlgorithmsInChapter02.testMergeWithoutRecursion(10000);
-        SortAlgorithmsInChapter02.testAllSortMethods(100000);
-//        int[] arr = {1, 2, 3, 4, 5};
-//        int[] abb = Arrays.copyOfRange(arr, 1, 3);
-//        System.out.println(Arrays.toString(abb));
+        int arraySize = 10002;
+        SortAlgorithmsInChapter02.testAllSortMethods(arraySize);
+        SortAlgorithmsInChapter02.testBinarySearch(arraySize);
+        SortAlgorithmsInChapter02.testLinearSearch(arraySize);
     }
 }
