@@ -1,5 +1,8 @@
 package cc.hisong.clrsnote.chapter02;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.Random;
 
@@ -44,10 +47,13 @@ public class SortAlgorithmsInChapter02 {
     /**
      * exercise 2.1-3 in chapter of clrs
      *
-     * @param arr   the array in which to find v
-     * @param value the value to find
-     * @return
+     * @param arr   the array to search in
+     * @param value the value to search
+     * @return if the key value is in the array specified to search, return it's index;
+     * @return if not, return null
      */
+    @Nullable
+    @Contract(pure = true)
     public static Integer linearSearch(int[] arr, int value) {
         int length = arr.length;
         for (int i = 0; i < length; i++) {
@@ -92,8 +98,9 @@ public class SortAlgorithmsInChapter02 {
 
     /**
      * merge function for mergeSort
+     * use sentinel in the procedure of merge
      *
-     * @param arr     the array to sort
+     * @param arr     the array to be sorted
      * @param left    the start index of left array
      * @param leftEnd the end index of left array
      * @param right   the end index of right array
@@ -122,6 +129,8 @@ public class SortAlgorithmsInChapter02 {
 
     /**
      * merge sort algorithm in chapter 2 of clrs
+     * with recursion
+     * use sentinel in the procedure of merge
      *
      * @param arr   the array to be sorted
      * @param left  the start of sort area
@@ -241,22 +250,25 @@ public class SortAlgorithmsInChapter02 {
 
     /**
      * exercise 2.3-5 in chapter 2 of clrs
-     * @param arr
-     * @param from
-     * @param to
-     * @param key
-     * @return
+     * also used as a sub procedure of method in exercise 2.3-6
+     * @param arr the array to search
+     * @param from the start index of the range to search
+     * @param to the end index of the range to search
+     * @param key the value to search
+     * @return if key is in the range specified by the args, the return it's index;
+     * @return if not, return the index the key value is supposed to be placed
+     *
      */
     public static int binarySearch(int[] arr, int from, int to, int key) {
         if (arr[from] > key) {
             return from;
         } else if (arr[to] < key) {
-            return to;
+            return to + 1;
         } else {
             int left = from, right = to;
-            while (left < right) {
+            while (left <= right) {
 
-                int middle = (left + right + 1) / 2;
+                int middle = (left + right) / 2;
                 //System.out.println(left+" "+middle+" "+right);
                 if (arr[middle] == key) {
 //                    while (arr[middle] == key) {
@@ -294,6 +306,24 @@ public class SortAlgorithmsInChapter02 {
         System.out.println("test on binary search pass in " + (end - start));
     }
 
+    /**
+     * exercise 2.3-6 in chapter 2 of clrs
+     * @param arr
+     */
+    public static void insertionSortWithBinarySearch(int[] arr) {
+
+        for (int i = 1; i < arr.length; i++) {
+            int key = arr[i];
+            int cursor = binarySearch(arr, 0, i - 1, key);
+//            System.arraycopy(arr, cursor, arr, cursor + 1, i - cursor);
+            for (int j = i; j > cursor; j--) {
+                arr[j] = arr[j - 1];
+            }
+            arr[cursor] = key;
+        }
+    }
+
+
     public static void testAllSortMethods(int arraySize) {
         int[] arr = (new Random()).ints(arraySize).toArray();
 //        mergeWithoutRecursion(arr);
@@ -307,27 +337,6 @@ public class SortAlgorithmsInChapter02 {
         end = System.nanoTime();
         checkIfSortedAscending(copyArr);
         System.out.println("test on built-in sort pass in " + (end - start));
-
-        copyArr = Arrays.copyOf(arr, arraySize);
-        start = System.nanoTime();
-        insertionSort(copyArr);
-        end = System.nanoTime();
-        checkIfSortedAscending(copyArr);
-        System.out.println("test on insertion sort pass in " + (end - start));
-
-        copyArr = Arrays.copyOf(arr, arraySize);
-        start = System.nanoTime();
-        insertionSortDescending(copyArr);
-        checkIfSortedDescending(copyArr);
-        end = System.nanoTime();
-        System.out.println("test on insertion descending sort pass in " + (end - start));
-
-        copyArr = Arrays.copyOf(arr, arraySize);
-        start = System.nanoTime();
-        selectionSort(copyArr);
-        end = System.nanoTime();
-        checkIfSortedAscending(copyArr);
-        System.out.println("test on selection sort pass in " + (end - start));
 
         copyArr = Arrays.copyOf(arr, arraySize);
         start = System.nanoTime();
@@ -352,10 +361,38 @@ public class SortAlgorithmsInChapter02 {
 
         copyArr = Arrays.copyOf(arr, arraySize);
         start = System.nanoTime();
+        selectionSort(copyArr);
+        end = System.nanoTime();
+        checkIfSortedAscending(copyArr);
+        System.out.println("test on selection sort pass in " + (end - start));
+
+        copyArr = Arrays.copyOf(arr, arraySize);
+        start = System.nanoTime();
+        insertionSort(copyArr);
+        end = System.nanoTime();
+        checkIfSortedAscending(copyArr);
+        System.out.println("test on insertion sort pass in " + (end - start));
+
+        copyArr = Arrays.copyOf(arr, arraySize);
+        start = System.nanoTime();
+        insertionSortDescending(copyArr);
+        checkIfSortedDescending(copyArr);
+        end = System.nanoTime();
+        System.out.println("test on insertion descending sort pass in " + (end - start));
+
+        copyArr = Arrays.copyOf(arr, arraySize);
+        start = System.nanoTime();
         insertionSortWithRecursion(copyArr, arraySize - 1);
         end = System.nanoTime();
         checkIfSortedAscending(copyArr);
         System.out.println("test on insertion sort with recursion pass in " + (end - start));
+
+        copyArr = Arrays.copyOf(arr, arraySize);
+        start = System.nanoTime();
+        insertionSortWithBinarySearch(copyArr);
+        end = System.nanoTime();
+        checkIfSortedAscending(copyArr);
+        System.out.println("test on insertion sort with binary search pass in " + (end - start));
 
     }
 
