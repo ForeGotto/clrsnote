@@ -323,6 +323,27 @@ public class SortAlgorithmsInChapter02 {
         }
     }
 
+    /**
+     * exercise 2.3-7 in chapter 2 of clrs
+     * find if there exists two elements in arr whose sum is x
+     * @param arr the array to search
+     * @param x the sum to search
+     * @return if there exists two elements in arr whose sum is x, return true;
+     * @return if not, return false
+     */
+    public static boolean isSumOfTwoElements(int[] arr, int x) {
+        Arrays.sort(arr);
+        for (int i = arr.length - 1; i >= 0; i--) {
+            int cursor = Arrays.binarySearch(arr, 0, i, x-arr[i]);
+            if (cursor > -1) {
+                System.out.printf("%d+%d=%d", arr[i], arr[cursor], x);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    
 
     public static void testAllSortMethods(int arraySize) {
         int[] arr = (new Random()).ints(arraySize).toArray();
