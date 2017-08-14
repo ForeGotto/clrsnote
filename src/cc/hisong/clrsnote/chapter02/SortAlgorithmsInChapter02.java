@@ -225,6 +225,12 @@ public class SortAlgorithmsInChapter02 {
         }
     }
 
+    /**
+     * sub procedure of exercise 2.3-4
+     *
+     * @param arr
+     * @param index
+     */
     private static void insert(int[] arr, int index) {
         int key = arr[index];
         int i = index - 1;
@@ -249,8 +255,12 @@ public class SortAlgorithmsInChapter02 {
     }
 
     /**
-     * exercise 2.3-5 in chapter 2 of clrs
-     * also used as a sub procedure of method in exercise 2.3-6
+     * exercise 2.3-5 in chapter 2 of clrs,
+     * also used as a sub procedure in exercise 2.3-6;
+     * if there are more than one position in the array with value key,
+     * we can't promise which one to return,
+     * yet we can modify the statements in the first branch of if-else clauses to
+     * determine which one to return
      * @param arr the array to search
      * @param from the start index of the range to search
      * @param to the end index of the range to search
@@ -308,7 +318,9 @@ public class SortAlgorithmsInChapter02 {
 
     /**
      * exercise 2.3-6 in chapter 2 of clrs
-     * @param arr
+     * use binary search to find where to insert the key instead of traversal
+     * yet it's still an O(N^2) method because you can't insert a key with only one copy
+     * @param arr the array to be sorted
      */
     public static void insertionSortWithBinarySearch(int[] arr) {
 
@@ -326,6 +338,9 @@ public class SortAlgorithmsInChapter02 {
     /**
      * exercise 2.3-7 in chapter 2 of clrs
      * find if there exists two elements in arr whose sum is x
+     * it's an O(N*lg(N)) method because merge sort's time is in O(N*lg(N)),
+     * and binary is in O(lg(N)), and we sort the array one time and search it
+     * no more than N times
      * @param arr the array to search
      * @param x the sum to search
      * @return if there exists two elements in arr whose sum is x, return true;
@@ -343,16 +358,112 @@ public class SortAlgorithmsInChapter02 {
         return false;
     }
 
-    
+    /**
+     * sub procedure of problem 2.4 in clrs
+     * modified from merge method of merge sort
+     * uses the following feature:
+     * if inversions exist between left part and right part of the array,
+     * then the amount of inversions related to the element(denoted by "key")in the left part
+     * is the amount of elements from right part which are already in the final array
+     * when "key" is put into the final array
+     *
+     * @param arr the array to search
+     * @param from the start index of the left part
+     * @param middle the end index of the left part and the start(exclusive) index of right
+     * @param to the end index of
+     * @return amount of inversions between left part and right part
+     */
+    public static int mergeInversion(int[] arr, int from, int middle, int to) {
+        int lefLength = middle - from + 1;
+        int rightLength = to - middle;
+        int[] leftArr = Arrays.copyOfRange(arr, from, middle + 2);
+        leftArr[lefLength] = Integer.MAX_VALUE;
+        int[] rightArr = Arrays.copyOfRange(arr, middle + 1, to + 2);
+        rightArr[rightLength] = Integer.MAX_VALUE;
+        int inversions = 0;
+        for (int k = from, i = 0, j = 0; k <= to; k++) {
+            if (leftArr[i] > rightArr[j]) {
+                arr[k] = rightArr[j];
+                j++;
+            } else {
+                arr[k] = leftArr[i];
+                i++;
+                inversions += j;
+            }
+        }
+
+        return inversions;
+    }
+
+    /**
+     * problem 2.4 in chapter 2 of clrs
+     * calculate the amount of inversions in the array
+     * it's modified from recursive merge sort, which means it's an O(N*lg(N)) method
+     * and it will sort the array while searching
+     * can be used in eight-digit puzzles to determine whether the case is solvable
+     *
+     * @param arr the array to search in
+     * @param from the start index to search
+     * @param to the end index to search
+     * @return amount of inversions in arr
+     */
+    public static int inversions(int[] arr, int from, int to) {
+        if (from == to) {
+            return 0;
+        }
+        int middle = (from + to) / 2;
+        int leftInversions = inversions(arr, from, middle);
+        int rightInversions = inversions(arr, middle + 1, to);
+        int middleInversions = mergeInversion(arr, from, middle, to);
+        return leftInversions + rightInversions + middleInversions;
+    }
+
+    /**
+     * calculate the inversions of the given array
+     * it's an O(N^2) method
+     *
+     * @param arr the array to search
+     * @return the amount of inversions in arr
+     */
+    public static int inversionAnswer(int[] arr) {
+        int inversions = 0;
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[i] > arr[j]) {
+                    inversions++;
+                }
+            }
+        }
+        return inversions;
+    }
+
+    public static void testInversionMethod(int arraySize) {
+        int[] arr = (new Random()).ints(arraySize).toArray();
+        long start, end;
+        int[] copyArr = Arrays.copyOf(arr, arraySize);
+
+        start = System.nanoTime();
+        int inversionWithMerge = inversions(copyArr, 0, arraySize - 1);
+        end = System.nanoTime();
+        StringBuilder stringBuilder =
+                new StringBuilder("test on inversions pass in " + (end - start));
+
+        start = System.nanoTime();
+        int inversionWithoutMerge = inversionAnswer(arr);
+        end = System.nanoTime();
+        stringBuilder.append("\nwith O(N^2) method pass in "+ (end - start));
+        if (inversionWithMerge != inversionWithoutMerge) throw new AssertionError();
+        else System.out.println(stringBuilder);
+    }
 
     public static void testAllSortMethods(int arraySize) {
         int[] arr = (new Random()).ints(arraySize).toArray();
-//        mergeWithoutRecursion(arr);
-//        insertionSortDescending(arr);
-        int[] copyArr = Arrays.copyOf(arr, arraySize);
+
+        int[] copyArr;
 
         long start, end;
 
+        copyArr = Arrays.copyOf(arr, arraySize);
         start = System.nanoTime();
         Arrays.sort(copyArr);
         end = System.nanoTime();
