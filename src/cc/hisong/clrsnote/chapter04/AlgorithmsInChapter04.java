@@ -6,6 +6,9 @@ public class AlgorithmsInChapter04 {
 
     /**
      * exercise 4.1-2 in chapter 4 of clrs
+     * return sub array which has biggest sum
+     * brute force method of O(N^2)
+     *
      * @param arr the array to search
      * @return the sub array which has biggest sum
      */
@@ -29,10 +32,10 @@ public class AlgorithmsInChapter04 {
      * sub procedure of exercise 4.1-3
      * return the sub array which crosses two parts and has biggest sum
      *
-     * @param arr the array to search
-     * @param from left origin
+     * @param arr    the array to search
+     * @param from   left origin
      * @param middle left bound and one element before right origin
-     * @param to right bound
+     * @param to     right bound
      * @return the sub array which crosses two parts and has biggest sum
      */
     public static SubArray maxCrossingSubArray(int[] arr, int from, int middle, int to) {
@@ -61,10 +64,11 @@ public class AlgorithmsInChapter04 {
     /**
      * exercise 4.1-3 of chapter 4 of clrs
      * return sub array which has biggest sum
+     * recursive method of O(N*log(N))
      *
-     * @param arr the array to search
+     * @param arr  the array to search
      * @param from origin of searching area
-     * @param to bound of searching area
+     * @param to   bound of searching area
      * @return the sub array which has biggest sum
      */
     public static SubArray maxSubArrayRecursive(int[] arr, int from, int to) {
@@ -78,11 +82,9 @@ public class AlgorithmsInChapter04 {
 
         if (leftArray.sum > rightArray.sum && leftArray.sum > middleArray.sum) {
             return leftArray;
-        }
-        else if (middleArray.sum > leftArray.sum && middleArray.sum > rightArray.sum) {
+        } else if (middleArray.sum > leftArray.sum && middleArray.sum > rightArray.sum) {
             return middleArray;
-        }
-        else  {
+        } else {
             return rightArray;
         }
     }
@@ -114,6 +116,33 @@ public class AlgorithmsInChapter04 {
         }
     }
 
+    /**
+     * exercise 4.1-5 in chapter of clrs
+     * return sub array which has biggest sum
+     * linear method of O(N)
+     *
+     * @param arr
+     * @return
+     */
+    public static SubArray maxSubArrayLinear(int[] arr) {
+
+        int left = 0, right = 0, max = Integer.MIN_VALUE, curLeft = 0, sum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            sum += arr[i];
+            if (sum > max) {
+                max = sum;
+                left = curLeft;
+                right = i;
+            }
+            if (sum < 0) {
+                curLeft = i + 1;
+                sum = 0;
+            }
+        }
+
+        return new SubArray(left, right, max);
+    }
+
     public static void testMaxSum(int arraySize) {
         int[] arr = (new Random(10000)).
                 ints(arraySize, -10000, 10000).
@@ -124,19 +153,24 @@ public class AlgorithmsInChapter04 {
         start = System.nanoTime();
         SubArray answer = maxSubArrayBruteForce(arr);
         end = System.nanoTime();
-        stringBuilder.append("brute max sum method pass in "+(end - start));
+        stringBuilder.append("brute max sum method pass in " + (end - start));
         start = System.nanoTime();
         SubArray recursiveAnswer = maxSubArrayRecursive(arr, 0, arraySize - 1);
         end = System.nanoTime();
-        stringBuilder.append("\nrecursive max sum method pass in "+(end - start));
+        stringBuilder.append("\nrecursive max sum method pass in " + (end - start));
+        start = System.nanoTime();
+        SubArray linearAnswer = maxSubArrayLinear(arr);
+        end = System.nanoTime();
+        stringBuilder.append("\nlinear max sum method pass in " + (end - start));
 
-//        System.out.println(answer);
-//        System.out.println(recursiveAnswer);
-        if (answer.equals(recursiveAnswer)) {
-            System.out.println(stringBuilder);
+        if (!answer.equals(recursiveAnswer)) {
+            throw new AssertionError("recursive max sum method fail");
+        } else if (!answer.equals(linearAnswer)) {
+            throw new AssertionError("linear max sum method fail");
         } else {
-            throw new AssertionError();
+            System.out.println(stringBuilder);
         }
     }
+
 
 }
