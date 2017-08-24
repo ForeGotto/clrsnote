@@ -531,14 +531,16 @@ public class SortAlgorithmsInChapter02 {
     private static void checkIfSortedAscending(int[] arr) {
         int size = arr.length;
         for (int i = 1; i < size; i++) {
-            if (arr[i] < arr[i - 1]) throw new AssertionError();
+            if (arr[i] < arr[i - 1])
+                throw new AssertionError(String.format("%d at %d, %d at %d", arr[i], i, arr[i - 1], i - 1));
         }
     }
 
     private static void checkIfSortedDescending(int[] arr) {
         int size = arr.length;
         for (int i = 1; i < size; i++) {
-            if (arr[i] > arr[i - 1]) throw new AssertionError();
+            if (arr[i] > arr[i - 1])
+                throw new AssertionError(String.format("%d at %d, %d at %d", arr[i], i, arr[i - 1], i - 1));
         }
     }
 }
