@@ -1,7 +1,7 @@
-package cc.hisong.clrsnote.chapter06;
 /**
  * some algorithms from clrs, either in the text or exercises or problems
  */
+package cc.hisong.clrsnote.chapter06;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -88,14 +88,14 @@ public class HeapSort {
         }
     }
 
-    public static void checkIfMaxHeap(int[] arr) {
-        for (int i = arr.length / 2 - 1; i >= 0; i--) {
+    public static void checkIfMaxHeap(int[] arr, int heapSize) {
+        for (int i = heapSize / 2 - 1; i >= 0; i--) {
             int left = i * 2 + 1;
             int right = left + 1;
-            if (left < arr.length && arr[left] > arr[i]) {
+            if (left < heapSize && arr[left] > arr[i]) {
                 throw new AssertionError(String.format("father at %d is %d, child at %d is %d", i, arr[i], left, arr[left]));
             }
-            if (right < arr.length && arr[right] > arr[i]) {
+            if (right < heapSize && arr[right] > arr[i]) {
                 throw new AssertionError(String.format("father at %d is %d, child at %d is %d", i, arr[i], left, arr[left]));
             }
         }
@@ -164,7 +164,7 @@ public class HeapSort {
         start = System.nanoTime();
         buildMaxHeap(copyArr);
         end = System.nanoTime();
-        checkIfMaxHeap(copyArr);
+        checkIfMaxHeap(copyArr, arraySize);
         System.out.println("test on max-heap building pass in " + (end - start));
 
         copyArr = Arrays.copyOf(arr, arraySize);
@@ -178,7 +178,7 @@ public class HeapSort {
         start = System.nanoTime();
         buildMaxHeapNonRecursion(copyArr);
         end = System.nanoTime();
-        checkIfMaxHeap(copyArr);
+        checkIfMaxHeap(copyArr, arraySize);
         System.out.println("test on max-heap building non recursive pass in " + (end - start));
     }
 
