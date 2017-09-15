@@ -29,6 +29,22 @@ public class QuickSort {
         }
     }
 
+    public static int randomizedPartition(int[] arr, int p, int r){
+        int cursor = (new Random()).nextInt(r - p + 1) + p;
+        int temp = arr[cursor];
+        arr[cursor] = arr[r];
+        arr[r] = temp;
+        return partition(arr, p, r);
+    }
+
+    public static void randomizedQuickSort(int[] arr, int p, int r) {
+        if (p < r) {
+            int q = randomizedPartition(arr, p, r);
+            randomizedQuickSort(arr, p, q - 1);
+            randomizedQuickSort(arr, q, r);
+        }
+    }
+
     public static void testQuickSort(int arraySize) {
         int[] arr = (new Random()).ints(arraySize).toArray();
 
@@ -49,6 +65,13 @@ public class QuickSort {
         end = System.nanoTime();
         checkIfSortedAscending(copyArr);
         System.out.println("test on quick sort pass in " + (end - start));
+
+        copyArr = Arrays.copyOf(arr, arraySize);
+        start = System.nanoTime();
+        randomizedQuickSort(copyArr, 0, arraySize - 1);
+        end = System.nanoTime();
+        checkIfSortedAscending(copyArr);
+        System.out.println("test on randomized quick sort pass in " + (end - start));
     }
 
     private static void checkIfSortedAscending(int[] arr) {
